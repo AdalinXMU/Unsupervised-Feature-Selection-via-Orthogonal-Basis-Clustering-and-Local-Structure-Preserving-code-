@@ -1,0 +1,21 @@
+function [X,W,S,V,U,Z,E] = Init_adaptive_graph3(X,nClass)
+
+num = size(X,2);
+dim = size(X,1);
+d = nClass;
+% d = ceil(dim/2);
+% d = ceil(dim/3);
+maxValue = max(max(X));
+X = X/maxValue;
+[S,U] = ADA_ORTH_init(X', nClass);
+X0 = X';
+mX0 = mean(X0);
+X1 = X0 - ones(num,1)*mX0;
+scal = 1./sqrt(sum(X1.*X1)+eps);
+scalMat = sparse(diag(scal));
+X = X1*scalMat;
+X = X';
+W = eye(dim,d);
+V = W'*X*U;
+E = W'*X - V*U';
+Z = max(0,U);

@@ -1,0 +1,35 @@
+clear;clc;
+folder ='C:\Users\13263\Desktop\data';
+addpath( genpath(folder) );
+% FeaNumCandi = [50,60,70,80,90,100,110,120,130,140,150];
+FeaNumCandi = [5,10,15,20,25,30,35,40,45,50];
+% FeaNumCandi = [3,6,9,12,15,18];
+% FeaNumCandi = [50,100,150,200,250,300]
+prefix_mdcs = [];
+nKmeans = 20;
+% dataset = 'Yale_32x32';
+% dataset = 'COIL20.mat';
+% dataset = 'warpPIE10P';
+% dataset = 'new_jaffe';
+% dataset = 'new_UMIST';
+dataset = 'lung_discrete';
+% dataset = 'ecoli_uni.mat';
+% dataset = 'dermatology_uni';
+% dataset = 'ionosphere_uni';
+% dataset = 'control_uni';
+% dataset = 'binalpha_uni';
+% dataset = 'MSRA25_uni';
+disp(['dataset:',dataset]);
+[X,Y] = extractXY(dataset);
+X = double(X);
+[nSmp,nDim] = size(X);
+X = X';
+class_num = length(unique(Y));
+[X,W,S,V,U,Z,E] = Init_convergence_adaptive_graph(X,class_num);
+% [X,W,S,V,U,Z,E] = Init_adaptive_graph(X,class_num);
+beta = 100;
+eta = 100;
+gamma = 100;
+res = adaptive_convergence_graph_model_21norm(X,W,S,V,U,E,beta,eta,gamma);
+plot(res)
+save(fullfile(prefix_mdcs, [dataset, '_best_result_convergence_adaptive_graph_21model.mat']), 'res');
